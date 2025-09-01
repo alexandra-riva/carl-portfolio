@@ -1,0 +1,156 @@
+/* ---------- Base reset & typography ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: #111;
+  background: #fff;
+}
+
+/* ---------- Layout containers ---------- */
+.page {
+  height: 100vh;
+  display: flex;
+  align-items: center; /* vertical centering */
+  justify-content: flex-start;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  position: fixed;
+  left: 3rem;               /* sidebar gap from left edge */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16rem;
+  height: 66vh;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(2px);
+  padding: 1.25rem 1.25rem;
+  z-index: 10;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.brand {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.nav {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.nav-link {
+  display: block;
+  text-decoration: none;
+  color: #111;
+  font-weight: 400;
+  line-height: 1.6;
+  padding: 0.25rem 0;
+}
+
+.nav-link:hover {
+  color: #c00;
+}
+
+.copy {
+  margin-top: 1.25rem;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* ---------- Horizontal image strip ---------- */
+.scroller {
+  flex: 1;
+  display: flex;
+  align-items: center; /* vertical center the track */
+  width: 100vw;
+  height: auto; /* allow height to be determined by content */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.track {
+  display: inline-flex;           /* expand width based on content */
+  align-items: center;
+  gap: 8px;
+  padding-left: calc(16rem + 3rem);  /* Sidebar width + gap */
+  padding-right: 1.5rem;
+  height: 66vh;
+  scroll-snap-type: x mandatory;
+  min-width: max-content;         /* make sure container stretches for scrolling */
+  scroll-padding-left: calc(16rem + 3rem); /* scroll snapping padding */
+  box-sizing: content-box;        /* so padding doesn't restrict width */
+  z-index: 1;                     /* behind sidebar */
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+.track {
+  scrollbar-width: none;
+}
+
+.track img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  scroll-snap-align: start;
+  display: block;
+}
+
+/* ---------- Mobile Responsive ---------- */
+@media (max-width: 700px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4rem;
+    transform: none;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1rem;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(2px);
+    z-index: 20;
+  }
+  .brand {
+    font-size: 1.2rem;
+    margin: 0 1rem 0 0;
+  }
+  .nav {
+    margin-top: 0;
+    flex: 1;
+  }
+  .nav-link {
+    display: inline-block;
+    padding: 0 0.5rem;
+    font-size: 1rem;
+  }
+  .copy {
+    display: none;
+  }
+  .scroller {
+    width: 100vw;
+    height: calc(100vh - 4rem);
+    margin-left: 0;
+    margin-top: 4rem;    /* account for sidebar height */
+  }
+  .track {
+    height: 56vh;
+    padding-left: 0.5rem;
+    min-width: 100vw;
+  }
+}
