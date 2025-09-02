@@ -6,101 +6,140 @@
 html, body {
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden;            /* prevent accidental page-level sideways scroll */
+  overflow-y: auto;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: #111;
   background: #fff;
+  scroll-behavior: smooth;
 }
+
+/* ===== Header ===== */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(4px);
+  background: #f9f9f9;
+}
+.header-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+.brand-left,
+.top-link {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  color: #888888;
+  text-decoration: none;
+}
+.top-link:hover { text-decoration: underline; }
+
+/* Push content down so header doesn’t overlap */
+.page { padding-top: 60px; }
 
 /* ---------- Layout containers ---------- */
 .page {
-  height: 100vh;
+  min-height: 100svh;            /* better mobile vh unit */
   display: flex;
-  align-items: center; /* vertical centering */
+  align-items: center;
   justify-content: flex-start;
+  position: relative;
 }
 
 /* ---------- Sidebar ---------- */
 .sidebar {
   position: fixed;
-  left: 3rem;               /* sidebar gap from left edge */
+  left: 3rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 16rem;
+  width: 14rem;
   height: 66vh;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(2px);
-  padding: 1.25rem 1.25rem;
+  padding: 1.25rem;
   z-index: 10;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.sidebar.hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.brand {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
+/* ---------- Nav ---------- */
 .nav {
-  margin-top: 0.5rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
-
 .nav-link {
+  font-family: 'Rock Salt', cursive;  /* headings in sidebar */
+  font-size: 1.2rem;
+  cursor: pointer;
   display: block;
-  text-decoration: none;
-  color: #111;
-  font-weight: 400;
-  line-height: 1.6;
-  padding: 0.25rem 0;
+  color: #000;              /* black by default */
+  text-decoration: none;    /* never underlined */
+  transition: color 0.25s ease;
+}
+.nav-link:hover { color: #fff; }       /* white on hover */
+.nav-link.active {
+  color: #000;              /* keep black when active */
+  text-decoration: none;    /* prevent underline */
 }
 
-.nav-link:hover {
-  color: #c00;
+/* ---------- Signature ---------- */
+.signature {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
-
-.copy {
-  margin-top: 1.25rem;
-  font-size: 11px;
-  color: #6b7280;
+.signature img {
+  max-width: 150px;
+  width: 60%;
+  height: auto;
+  opacity: 0.85;
 }
 
 /* ---------- Horizontal image strip ---------- */
 .scroller {
   flex: 1;
   display: flex;
-  align-items: center; /* vertical center the track */
+  align-items: center;
   width: 100vw;
-  height: auto; /* allow height to be determined by content */
+  height: auto;
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;   /* iOS momentum */
+  touch-action: pan-x;                  /* hint for touch scrolling */
 }
 .track {
-  display: inline-flex;           /* expand width based on content */
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding-left: calc(16rem + 3rem);  /* Sidebar width + gap */
+  padding-left: calc(14rem + 3rem);     /* start images after fixed sidebar */
   padding-right: 1.5rem;
   height: 66vh;
+  min-width: max-content;
   scroll-snap-type: x mandatory;
-  min-width: max-content;         /* make sure container stretches for scrolling */
-  scroll-padding-left: calc(16rem + 3rem); /* scroll snapping padding */
-  box-sizing: content-box;        /* so padding doesn't restrict width */
-  z-index: 1;                     /* behind sidebar */
+  scroll-padding-left: calc(14rem + 3rem);
+  box-sizing: content-box;
+  z-index: 1;
 }
-
-.track::-webkit-scrollbar {
-  display: none;
-}
-.track {
-  scrollbar-width: none;
-}
+.track::-webkit-scrollbar { display: none; }
+.track { scrollbar-width: none; }
 
 .track img {
   height: 100%;
@@ -108,49 +147,146 @@ html, body {
   object-fit: cover;
   scroll-snap-align: start;
   display: block;
+  filter: grayscale(100%);
+  transition: filter 0.5s ease, transform 0.25s ease;
+  will-change: transform;
 }
+.track img:hover,
+.track img:focus {
+  filter: grayscale(0%);
+  transform: translateY(-1px);
+}
+
+/* ---------- About Section ---------- */
+.about-section {
+  width: 100%;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+/* Title in Rock Salt */
+.about-title {
+  font-family: 'Rock Salt', cursive;   /* changed from Poppins */
+  font-weight: 300;
+  font-size: 3.2rem;
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+/* About text in Poppins */
+.about-description {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  color: #444;
+}
+
+/* ---------- Subsections ---------- */
+.sub-title {
+  font-family: 'Rock Salt', cursive;   /* headings in Rock Salt */
+  font-size: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: #111;
+}
+
+.sub-description {
+  font-family: "Poppins", sans-serif;  /* body in Poppins */
+  font-size: 1rem;                  /* a little smaller */
+  font-weight: 300;
+  line-height: 1.4;                    /* tighter line spacing */
+  color: #444;
+  margin-bottom: 0.75rem;              /* less space between paragraphs */
+}
+
+.sub-list {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  color: #444;
+  font-weight: 300;
+  line-height: 1.4;
+  margin: 0.25rem auto 1rem;
+  text-align: left;
+  max-width: 820px;
+}
+.sub-list li { margin-bottom: 0.4rem; }
+
+/* ---------- Contact Section ---------- */
+.contact-section { margin-top: 2rem; }
+
+/* Contact title in Rock Salt */
+.contact-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+  font-weight: 300;
+}
+
+.contact-description a,
+.contact-description a:visited {
+  color: #444;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+   font-size: 0.8rem;
+}
+
+
+/* ---------- Footer ---------- */
+.site-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: #888888;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+}
+.site-footer p { margin: 0; }
 
 /* ---------- Mobile Responsive ---------- */
 @media (max-width: 700px) {
   .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 4rem;
+    position: static;
     transform: none;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 1rem;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(2px);
-    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .brand {
-    font-size: 1.2rem;
-    margin: 0 1rem 0 0;
-  }
-  .nav {
-    margin-top: 0;
-    flex: 1;
-  }
-  .nav-link {
-    display: inline-block;
-    padding: 0 0.5rem;
-    font-size: 1rem;
-  }
-  .copy {
-    display: none;
-  }
+  .nav { gap: 0.5rem; }
+  .nav-link { font-size: 1rem; }
+  .signature img { max-width: 120px; width: 45%; }
+
   .scroller {
     width: 100vw;
-    height: calc(100vh - 4rem);
-    margin-left: 0;
-    margin-top: 4rem;    /* account for sidebar height */
+    height: auto;
+    margin: 0;
   }
   .track {
     height: 56vh;
-    padding-left: 0.5rem;
+    padding-left: 1rem;          /* no fixed sidebar on mobile */
+    scroll-padding-left: 1rem;
+    padding-right: 1rem;
     min-width: 100vw;
   }
+  .track img { height: 56vh; width: auto; }
+
+  .about-section { padding: 3rem 1rem; }
+  .about-title { font-size: 1.6rem; }
+  .about-description { font-size: 1rem; }
 }
